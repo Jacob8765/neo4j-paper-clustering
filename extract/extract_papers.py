@@ -7,6 +7,7 @@ from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 from langchain.prompts import PromptTemplate, ChatPromptTemplate, HumanMessagePromptTemplate
 from langchain.llms import OpenAI
 from langchain.chat_models import ChatOpenAI
+from langchain.embeddings import OpenAIEmbeddings
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -31,6 +32,8 @@ prompt = ChatPromptTemplate(
 
 chat_model = ChatOpenAI(temperature=0)
 
+embeddings_model = OpenAIEmbeddings()
+
 def process_pdf(pdf_path):
     """
     Extracts the title, abstract, and authors from a PDF file.
@@ -42,6 +45,9 @@ def process_pdf(pdf_path):
     _input = prompt.format_prompt(paper_data=pages[0])
     output = chat_model(_input.to_messages())
     paper_data = output_parser.parse(output.content)
+
+    #Add embeddings
+    paper_data["abstract_embedding"] = embeddings_model.embed_query(paper_data["abstract"])
 
     return paper_data
 
@@ -57,6 +63,14 @@ def main():
             papers_data = json.load(json_file)
 
         processed_files = set([paper_data["file_name"] for paper_data in papers_data])
+
+    #for each paper in the json, add the embeddings
+    for paper_data in papers_data:
+        paper_data["abstract_embedding"] = embeddings_model.embed_query(paper_data["abstract"])
+
+    with open(output_file, 'w') as json_file:
+        json.dump(papers_data, json_file, indent=2)
+    return
 
     # Iterate through all PDF files in the specified directory
     for index, file_name in enumerate(os.listdir(pdfs_directory)):
