@@ -49,10 +49,19 @@ def main():
     pdfs_directory = "papers"
     output_file = "papers_data.json"
     papers_data = []
+    # processed_files = set()
+
+    #check which filenames have already been written to the output file
+    if os.path.exists(output_file):
+        with open(output_file, 'r') as json_file:
+            papers_data = json.load(json_file)
+
+        processed_files = set([paper_data["file_name"] for paper_data in papers_data])
 
     # Iterate through all PDF files in the specified directory
     for index, file_name in enumerate(os.listdir(pdfs_directory)):
-        if file_name.endswith(".pdf"):
+        if file_name.endswith(".pdf") and file_name not in processed_files:
+
             print(f"Extracting paper number {index + 1} -- {file_name}")
             pdf_path = os.path.join(pdfs_directory, file_name)
 
