@@ -64,13 +64,13 @@ def main():
 
         processed_files = set([paper_data["file_name"] for paper_data in papers_data])
 
-    #for each paper in the json, add the embeddings
-    for paper_data in papers_data:
-        paper_data["abstract_embedding"] = embeddings_model.embed_query(paper_data["abstract"])
+    # #for each paper in the json, add the embeddings
+    # for paper_data in papers_data:
+    #     paper_data["abstract_embedding"] = embeddings_model.embed_query(paper_data["abstract"])
 
-    with open(output_file, 'w') as json_file:
-        json.dump(papers_data, json_file, indent=2)
-    return
+    # with open(output_file, 'w') as json_file:
+    #     json.dump(papers_data, json_file, indent=2)
+    # return
 
     # Iterate through all PDF files in the specified directory
     for index, file_name in enumerate(os.listdir(pdfs_directory)):
