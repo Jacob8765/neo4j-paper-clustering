@@ -24,7 +24,7 @@ format_instructions = output_parser.get_format_instructions()
 prompt = ChatPromptTemplate(
     messages=[
         HumanMessagePromptTemplate.from_template(
-    "Your job is to extract data given the first page of a research paper. If unsure for any field, leave it blank.\n{format_instructions}\n{paper_data}")]
+    "Your job is to extract data given the first page of a research paper. If unsure for any field, leave it blank, with the exception being the abstract (if not available, give a discription of the paper)\n{format_instructions}\n{paper_data}")]
     ,
     input_variables=["paper_data"],
     partial_variables={"format_instructions": format_instructions}
