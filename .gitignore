@@ -1,4 +1,4 @@
 venv/
 .env
-extract/papers/*
+extract/papers/*.pdf
 extract/papers_data.json
